@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'pages/home_page.dart';
 import 'pages/login.dart';
 import 'pages/aluno.dart';
-import 'pages/cadastro.dart';
+import 'pages/cadastro_professor.dart';
+import 'pages/cadastro_aluno.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -11,7 +12,8 @@ void main() {
       "/home": (context) => HomePage(),
       "/login": (context) => Login(),
       "/perfil": (context) => Aluno(),
-      "/cadastro": (context) => Cadastro()
+      "/cadastroProfessor": (context) => CadastroProfessor(),
+      "/cadastroAluno": (context) => CadastroAluno()
     },
   ));
 }

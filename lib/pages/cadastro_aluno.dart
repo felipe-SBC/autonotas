@@ -1,19 +1,13 @@
 import 'package:flutter/material.dart';
-import 'aluno.dart'; // Importa o arquivo onde está a página de perfil
-import 'cadastro_professor.dart'; // Importa a página de cadastro
-import 'cadastro_aluno.dart';
 
-class Login extends StatefulWidget {
-  const Login({Key? key}) : super(key: key);
+class CadastroAluno extends StatefulWidget {
+  const CadastroAluno({Key? key}) : super(key: key);
 
   @override
-  _LoginState createState() => _LoginState();
+  State<CadastroAluno> createState() => _CadastroAlunoState();
 }
 
-class _LoginState extends State<Login> {
-  // Variável para controlar o tipo de usuário selecionado
-  String _userType = 'Aluno'; // Valor inicial padrão
-
+class _CadastroAlunoState extends State<CadastroAluno> {
   @override
   Widget build(BuildContext context) {
     final bool isSmallScreen = MediaQuery.of(context).size.width < 600;
@@ -23,119 +17,23 @@ class _LoginState extends State<Login> {
         child: isSmallScreen
             ? Column(
                 mainAxisSize: MainAxisSize.min,
-                children: [
-                  const _Logo(),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16.0),
-                    child: _userTypeSelection(),
-                  ),
-                  const _FormContent(),
-                  // Adicionando o link "Cadastre-se"
-                  _cadastreSeLink(context),
+                children: const [
+                  _Logo(),
+                  _FormCadastro(),
                 ],
               )
             : Container(
                 padding: const EdgeInsets.all(32.0),
                 constraints: const BoxConstraints(maxWidth: 800),
                 child: Row(
-                  children: [
-                    const Expanded(child: _Logo()),
+                  children: const [
+                    Expanded(child: _Logo()),
                     Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 16.0),
-                            child: _userTypeSelection(),
-                          ),
-                          const _FormContent(),
-                          // Adicionando o link "Cadastre-se"
-                          _cadastreSeLink(context),
-                        ],
-                      ),
+                      child: Center(child: _FormCadastro()),
                     ),
                   ],
                 ),
               ),
-      ),
-    );
-  }
-
-  // Método que retorna o Widget de seleção de usuário (Aluno ou Professor)
-  Widget _userTypeSelection() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center, // Centraliza os botões
-      children: [
-        Row(
-          children: [
-            Radio<String>(
-              value: 'Aluno',
-              groupValue: _userType,
-              onChanged: (value) {
-                setState(() {
-                  _userType = value!;
-                });
-              },
-            ),
-            const Text('Aluno'),
-          ],
-        ),
-        const SizedBox(width: 20), // Espaçamento entre os botões
-        Row(
-          children: [
-            Radio<String>(
-              value: 'Professor',
-              groupValue: _userType,
-              onChanged: (value) {
-                setState(() {
-                  _userType = value!;
-                });
-              },
-            ),
-            const Text('Professor'),
-          ],
-        ),
-      ],
-    );
-  }
-
-  // Link para a página "Cadastre-se"
-  Widget _cadastreSeLink(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 16.0),
-      child: TextButton(
-        onPressed: () {
-          // Verifica o tipo de usuário e navega para a página correspondente
-          if (_userType == "Professor") {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => CadastroProfessor()),
-            );
-          } else if (_userType == "Aluno") {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      CadastroAluno()), // Altere aqui para sua classe de cadastro de aluno
-            );
-          } else {
-            // Aqui você pode tratar o caso em que _userType não é nem "Professor" nem "Aluno"
-            // Por exemplo, mostrar um alerta ou uma mensagem
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Tipo de usuário inválido!'),
-              ),
-            );
-          }
-        },
-        child: const Text(
-          'Cadastre-se',
-          style: TextStyle(
-            color: Colors.blue, // Cor do texto "Cadastre-se"
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
-        ),
       ),
     );
   }
@@ -160,11 +58,11 @@ class _Logo extends StatelessWidget {
           child: ShaderMask(
             shaderCallback: (bounds) => _createGradientShader(bounds),
             child: Text(
-              "Auto Notas",
+              "Cadastro de Aluno",
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: isSmallScreen ? 24 : 32,
-                color: Colors.white, // O ShaderMask sobrescreverá essa cor
+                color: Colors.white,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -187,31 +85,28 @@ class _Logo extends StatelessWidget {
   }
 }
 
-class _FormContent extends StatefulWidget {
-  const _FormContent({Key? key}) : super(key: key);
+class _FormCadastro extends StatefulWidget {
+  const _FormCadastro({Key? key}) : super(key: key);
 
   @override
-  State<_FormContent> createState() => __FormContentState();
+  State<_FormCadastro> createState() => __FormCadastroState();
 }
 
-class __FormContentState extends State<_FormContent> {
+class __FormCadastroState extends State<_FormCadastro> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _isPasswordVisible = false;
 
   void janelaAlerta(BuildContext context) {
     Widget okButton = TextButton(
-      child: Text("Ok"),
+      child: const Text("Ok"),
       onPressed: () {
         Navigator.pop(context);
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => Aluno()),
-        );
       },
     );
     var alerta = AlertDialog(
       actions: [okButton],
-      title: Text("Login"),
-      content: Text("Login Realizado com sucesso"),
+      title: const Text("Cadastro"),
+      content: const Text("Cadastro realizado com sucesso"),
     );
     showDialog(
       context: context,
@@ -220,8 +115,6 @@ class __FormContentState extends State<_FormContent> {
       },
     );
   }
-
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -233,19 +126,69 @@ class __FormContentState extends State<_FormContent> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            // Campo de Nome
             TextFormField(
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Por favor, insira algum texto';
+                  return 'Por favor, insira seu nome';
                 }
+                return null;
+              },
+              decoration: const InputDecoration(
+                labelText: 'Nome Completo',
+                hintText: 'Nome Completo',
+                prefixIcon: Icon(Icons.person_outline),
+                border: OutlineInputBorder(),
+              ),
+            ),
+            _gap(),
 
+            // Campo de Curso
+            TextFormField(
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Por favor, insira seu curso';
+                }
+                return null;
+              },
+              decoration: const InputDecoration(
+                labelText: 'Curso',
+                hintText: 'Nome do Curso',
+                prefixIcon: Icon(Icons.school),
+                border: OutlineInputBorder(),
+              ),
+            ),
+            _gap(),
+
+            // Campo de RA
+            TextFormField(
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Por favor, insira seu RA';
+                }
+                return null;
+              },
+              decoration: const InputDecoration(
+                labelText: 'RA',
+                hintText: 'Registro Acadêmico',
+                prefixIcon: Icon(Icons.confirmation_number),
+                border: OutlineInputBorder(),
+              ),
+            ),
+            _gap(),
+
+            // Campo de Email
+            TextFormField(
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Por favor, insira seu e-mail';
+                }
                 bool emailValid = RegExp(
                         r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                     .hasMatch(value);
                 if (!emailValid) {
-                  return 'Por favor, insira um email válido';
+                  return 'Por favor, insira um e-mail válido';
                 }
-
                 return null;
               },
               decoration: const InputDecoration(
@@ -256,12 +199,13 @@ class __FormContentState extends State<_FormContent> {
               ),
             ),
             _gap(),
+
+            // Campo de Senha
             TextFormField(
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Por favor, insira algum texto';
+                  return 'Por favor, insira sua senha';
                 }
-
                 if (value.length < 6) {
                   return 'A senha deve ter pelo menos 6 caracteres';
                 }
@@ -286,6 +230,8 @@ class __FormContentState extends State<_FormContent> {
               ),
             ),
             _gap(),
+
+            // Botão de Cadastrar
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -297,13 +243,30 @@ class __FormContentState extends State<_FormContent> {
                 child: const Padding(
                   padding: EdgeInsets.all(10.0),
                   child: Text(
-                    'Entrar',
+                    'Cadastrar',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
                 onPressed: () {
-                  janelaAlerta(context);
+                  if (_formKey.currentState!.validate()) {
+                    janelaAlerta(context); // Chama a função corretamente
+                  }
                 },
+              ),
+            ),
+            _gap(),
+
+            // Link para Login
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text(
+                'Já tem uma conta? Faça login!',
+                style: TextStyle(
+                  color: Colors.blue,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ],
