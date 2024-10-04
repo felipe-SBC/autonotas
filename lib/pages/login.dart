@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
 import 'aluno.dart'; // Importa o arquivo onde está a página de perfil
 
-class Login extends StatelessWidget {
+class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
+
+  @override
+  _LoginState createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
+  // Variável para controlar o tipo de usuário selecionado
+  String _userType = 'Aluno'; // Valor inicial padrão
 
   @override
   Widget build(BuildContext context) {
@@ -13,24 +21,77 @@ class Login extends StatelessWidget {
         child: isSmallScreen
             ? Column(
                 mainAxisSize: MainAxisSize.min,
-                children: const [
-                  _Logo(),
-                  _FormContent(),
+                children: [
+                  const _Logo(),
+                  // Adicionando o botão de seleção de Aluno ou Professor
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    child: _userTypeSelection(),
+                  ),
+                  const _FormContent(),
                 ],
               )
             : Container(
                 padding: const EdgeInsets.all(32.0),
                 constraints: const BoxConstraints(maxWidth: 800),
                 child: Row(
-                  children: const [
-                    Expanded(child: _Logo()),
+                  children: [
+                    const Expanded(child: _Logo()),
                     Expanded(
-                      child: Center(child: _FormContent()),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          // Adicionando o botão de seleção de Aluno ou Professor
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 16.0),
+                            child: _userTypeSelection(),
+                          ),
+                          const _FormContent(),
+                        ],
+                      ),
                     ),
                   ],
                 ),
               ),
       ),
+    );
+  }
+
+  // Método que retorna o Widget de seleção de usuário (Aluno ou Professor)
+  Widget _userTypeSelection() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center, // Centraliza os botões
+      children: [
+        Row(
+          children: [
+            Radio<String>(
+              value: 'Aluno',
+              groupValue: _userType,
+              onChanged: (value) {
+                setState(() {
+                  _userType = value!;
+                });
+              },
+            ),
+            const Text('Aluno'),
+          ],
+        ),
+        const SizedBox(width: 20), // Espaçamento entre os botões
+        Row(
+          children: [
+            Radio<String>(
+              value: 'Professor',
+              groupValue: _userType,
+              onChanged: (value) {
+                setState(() {
+                  _userType = value!;
+                });
+              },
+            ),
+            const Text('Professor'),
+          ],
+        ),
+      ],
     );
   }
 }
@@ -129,7 +190,6 @@ class __FormContentState extends State<_FormContent> {
           children: [
             TextFormField(
               validator: (value) {
-                // adicionar validação de email
                 if (value == null || value.isEmpty) {
                   return 'Por favor, insira algum texto';
                 }

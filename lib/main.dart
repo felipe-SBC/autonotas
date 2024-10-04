@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'pages/home_page.dart';
 import 'pages/login.dart';
 import 'pages/aluno.dart';
+import 'pages/cadastro.dart';
 
 void main() {
-  runApp( MaterialApp(
+  runApp(MaterialApp(
     initialRoute: "/home",
     routes: {
       "/home": (context) => HomePage(),
       "/login": (context) => Login(),
       "/perfil": (context) => Aluno(),
+      "/cadastro": (context) => Cadastro()
     },
   ));
 }

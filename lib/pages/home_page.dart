@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'student_page.dart'; // Importa a página do aluno
+//import 'student_page.dart'; // Importa a página do aluno
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
